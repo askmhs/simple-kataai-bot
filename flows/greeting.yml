@@ -1,0 +1,22 @@
+active: true
+intents:
+    greetingIntent:
+        initial: true
+        type: text
+        classifier:
+            nlu: intent
+            match: greetingNLU
+states:
+    init:
+        initial: true
+        transitions:
+            showGreeting:
+                fallback: true
+    showGreeting:
+        action: sayHello
+        end: true
+actions:
+    sayHello:
+        type: text
+        options:
+            text: 'Halo, selamat datang!'

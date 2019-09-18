@@ -1,0 +1,43 @@
+active: true
+intents:
+  weatherIntent:
+    initial: true
+    type: text
+    condition: content === "cuaca"
+  areaFilledIntent:
+    type: text
+    classifier:
+      nlu: intent
+      match: areaNLU
+  reenter:
+    type: command
+    condition: content === "reenter"
+states:
+  init:
+    initial: true
+    transitions:
+      inputArea:
+        condition: intent === "weatherIntent"
+        fallback: true
+  inputArea:
+    action: askArea
+    transitions:
+      toWeatherResult:
+        condition: intent === "areaFilledIntent"
+        mapping:
+          data:
+            chosenArea: content
+      inputArea:
+        fallback: true
+  toWeatherResult:
+    action: toWeatherResultCommand
+    end: true
+actions:
+  askArea:
+    type: text
+    options:
+      text: "Kamu mau cuaca di daerah mana?"
+  toWeatherResultCommand:
+    type: command
+    options:
+      command: weatherResultCommand

@@ -1,0 +1,18 @@
+intent:
+  type: keyword
+  options:
+    keywords:
+      greetingNLU:
+        - hi
+        - halo
+        - hai
+        - hello
+        - oi
+        - cuy
+      areaNLU:
+        - Malang
+        - Jombang
+        - Surabaya
+        - Sragen
+        - Bogor
+        - Sawojajar
