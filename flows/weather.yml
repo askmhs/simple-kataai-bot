@@ -5,10 +5,8 @@ intents:
     type: text
     condition: content === "cuaca"
   areaFilledIntent:
-    type: text
-    classifier:
-      nlu: intent
-      match: areaNLU
+    type: data
+    condition: payload.type === "area" && (payload.value === "Malang" || payload.value === "Surabaya")
   reenter:
     type: command
     condition: content === "reenter"
@@ -24,9 +22,7 @@ states:
     transitions:
       toWeatherResult:
         condition: intent === "areaFilledIntent"
-        mapping:
-          data:
-            chosenArea: content
+        mapping: setArea
       inputArea:
         fallback: true
   toWeatherResult:
@@ -34,9 +30,9 @@ states:
     end: true
 actions:
   askArea:
-    type: text
-    options:
-      text: "Kamu mau cuaca di daerah mana?"
+    type: method
+    method: showAreaOption
+    options: {}
   toWeatherResultCommand:
     type: command
     options:
