@@ -28,3 +28,13 @@ showAreaOption(message, context, data, options): >
       }
     }
   };
+debugContext(message, context, data, options): >
+  return {
+    type: "text",
+    content: JSON.stringify(context)
+  };
+debugPayload(message, context, data, options): >
+  return {
+    type: "text",
+    content: JSON.stringify(options.data)
+  };

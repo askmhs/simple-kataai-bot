@@ -4,17 +4,65 @@ intents:
     initial: true
     type: command
     condition: content === "weatherResultCommand"
+  weatherResultAPIIntent:
+    type: command
+    condition: content === "handleCallWeatherAPICommand"
 states:
   init:
     initial: true
     transitions:
+      fetchWeatherData:
+        fallback: true
+  fetchWeatherData:
+    action:
+      - name: callWeatherAPI
+      - name: handleCallWeatherAPI
+    transitions:
       weatherResult:
+        condition: intent === "weatherResultAPIIntent" && payload.result
+        mapping:
+          context:
+            weatherData: payload.result.main
+      failedFetchWeather:
         fallback: true
   weatherResult:
     action: showWeatherInfo
+    end: true
+  failedFetchWeather:
+    action: sayErrorFetchWeatherMessage
     end: true
 actions:
   showWeatherInfo:
     type: text
     options:
-      text: "Cuaca di daerah $(data.chosenArea) adalah 27 derajat."
+      text: "Cuaca di daerah $(data.chosenArea) adalah $(context.weatherData.temp) Fahrenheit."
+  callWeatherAPI:
+    type: api
+    options:
+      method: GET
+      uri: "https://samples.openweathermap.org/data/2.5/weather"
+      query:
+        q: data.chosenArea
+        appid: "b6907d289e10d714a6e88b30761fae22"
+  handleCallWeatherAPI:
+    type: command
+    options:
+      command: handleCallWeatherAPICommand
+      payload:
+        result: $(result)
+  sayErrorFetchWeatherMessage:
+    type: text
+    options:
+      text: "Maaf, data cuaca tidak ditemukan untuk kota $(data.chosenArea)."
+  debuggingContext:
+    type: method
+    method: debugContext
+  debuggingPayload:
+    type: method
+    method: debugPayload
+    options:
+      data: $(result)
+
+
+
+
